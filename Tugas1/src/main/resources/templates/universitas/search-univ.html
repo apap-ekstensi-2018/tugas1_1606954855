@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Home</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    	<script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js}"></script>
+        <link th:href="@{http://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css}" rel="stylesheet"/> 	
+        <script th:src="@{http://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js}"></script> 
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+    <div th:replace="fragments/fragment :: header">
+      <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Static header</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin-top:60px;">
+    		<h1>Cari Mahasiswa</h1>
+    		<hr/>
+        <form action="/mahasiswa" method="get">
+        	<b>Universitas</b><br/>
+        	<select class="form-control" th:field="${operator.opeId}"  id="dropOperator">
+	    <option value="0" th:text="pilih universitas" ></option>
+	    <option th:each="operator : ${universitas}" th:value="${universitas.id}" th:text="${universitas.kode_universitas}"></option>
+	    </select>
+        	<input class="btn btn-success" type="submit" value="Lihat" />
+        </form>
+    </div>
+    </body>
+</html>

@@ -1,0 +1,37 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Home</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    	<script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js}"></script>
+        <link th:href="@{http://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css}" rel="stylesheet"/> 	
+        <script th:src="@{http://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js}"></script> 
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+    <div th:replace="fragments/fragment :: header">
+      <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Static header</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin-top:60px;">
+    		<h1>Sistem Informasi Kemahasiswaan</h1>
+    		Selamat datang di Sistem Informasi Kemahasiswaan<hr/>
+        <h2>Lihat Data Mahasiswa Berdasarkan NPM</h2>
+        <form action="/mahasiswa" method="get">
+        	Masukkan Nomor Pokok Mahasiswa:<br/>
+        	<input class="form-control" style="width:18%" type="text" name="npm" /><br/>
+        	<input class="btn btn-success" type="submit" value="Lihat" />
+        </form>
+    </div>
+    </body>
+</html>
