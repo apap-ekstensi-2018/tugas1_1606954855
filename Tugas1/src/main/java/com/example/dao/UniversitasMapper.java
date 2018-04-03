@@ -18,4 +18,5 @@ public interface UniversitasMapper {
 			@Result(property="kode_univ", column="kode_univ"),
 			@Result(property="nama_univ", column="nama_univ")
 	})List<UniversitasModel> getAllUniv ();
+	
 }

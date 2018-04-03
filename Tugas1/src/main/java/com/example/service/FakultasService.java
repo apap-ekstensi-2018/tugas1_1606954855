@@ -1,5 +1,7 @@
 package com.example.service;
 
-public interface FakultasService {
+import com.example.model.FakultasModel;
 
+public interface FakultasService {
+	FakultasModel selectFakultas(int id_fakultas);
 }

@@ -1,5 +1,7 @@
 package com.example.service;
 
-public interface ProgramStudiService {
+import com.example.model.ProgramStudiModel;
 
+public interface ProgramStudiService {
+	ProgramStudiModel selectProdi(int id_prodi);
 }

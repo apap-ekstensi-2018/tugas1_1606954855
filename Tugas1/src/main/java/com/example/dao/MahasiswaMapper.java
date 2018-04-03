@@ -58,7 +58,6 @@ public interface MahasiswaMapper {
 	
 	@Select("select * from mahasiswa where id_prodi = #{id_prodi} order by id desc limit 1")
     @Results( value = {
-            @Result(property = "id", column = "id"),
             @Result(property = "npm", column = "npm"),
             @Result(property = "nama", column = "nama"),
             @Result(property = "tempat_lahir", column = "tempat_lahir"),
@@ -73,12 +72,35 @@ public interface MahasiswaMapper {
     })
     MahasiswaModel selectMahasiswaByProdi (@Param("id_prodi") int id_prodi);
 	
+	@Select("select * from universitas where id = #{id_univ}")
+    @Results( value = {
+            @Result(property = "kode_univ", column = "kode_univ"),
+            @Result(property = "nama_unv", column = "nama_unv"),
+    })
+    UniversitasModel selectUniversitas(@Param("id_univ") int id_univ);
+	
 	@Select("select * from mahasiswa where npm LIKE #{npm} order by npm desc limit 1")
     @Results( value = {
-            @Result(property = "id", column = "id"),
             @Result(property = "npm", column = "npm")
     })
     MahasiswaModel selectMahasiswaByNpm (@Param("npm") String npm);
+	
+	@Select("select p.* from program_studi p where p.kode_prodi = #{id_prodi}")
+    @Results( value = {
+            @Result(property = "kode_prodi", column = "kode_prodi"),
+            @Result(property = "nama_prodi", column = "nama_prodi"),
+            @Result(property = "fakultas", column = "id_fakultas", one = @One(select = "selectFakultas"))
+    })
+    ProgramStudiModel selectProdi(@Param("id_prodi") int id_prodi);
+	
+	@Select("select * from fakultas where kode_fakultas = #{id_fakultas}")
+    @Results( value = {
+            @Result(property = "kode_fakultas", column = "kode_fakultas"),
+            @Result(property = "nama_fakultas", column = "nama_fakultas"),
+            @Result(property = "univ", column = "id_univ", one = @One(select = "selectUniversitas"))
+    })
+    FakultasModel selectFakultas(@Param("id_fakultas") int id_fakultas);
+    
 	
 	@Insert("INSERT INTO mahasiswa (npm, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, agama, golongan_darah, tahun_masuk, jalur_masuk, id_prodi) "
 			+ "VALUES (#{mahasiswa.npm}, #{mahasiswa.nama}, #{mahasiswa.tempat_lahir},  #{mahasiswa.tanggal_lahir}, #{mahasiswa.jenis_kelamin}, #{mahasiswa.agama}, #{mahasiswa.golongan_darah}, #{mahasiswa.tahun_masuk}, #{mahasiswa.jalur_masuk}, #{mahasiswa.id_prodi})")
