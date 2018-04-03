@@ -41,13 +41,13 @@ public interface MahasiswaMapper {
 				many=@Many(select="searchProdi"))
 	})MahasiswaModel searchMahasiswa (@Param("npm") String npm);
 	
-	@Select("select kode_univ from universitas where id = (select id_univ from fakultas where id = (select id_fakultas from program_studi where id = #{kode_prodi}))")
+	@Select("select kode_univ, nama_univ from universitas where id = (select id_univ from fakultas where id = (select id_fakultas from program_studi where id = #{kode_prodi}))")
 	UniversitasModel searchUniv (@Param("kode_prodi") String kode_prodi);
 	
-	@Select("select kode_fakultas from fakultas where id = (select id_fakultas from program_studi where id = #{kode_prodi})")
+	@Select("select kode_fakultas, nama_fakultas from fakultas where id = (select id_fakultas from program_studi where id = #{kode_prodi})")
 	UniversitasModel searchFakultas (@Param("kode_prodi") String kode_prodi);
 	
-	@Select("select kode_prodi from program_studi where id = #{kode_prodi}")
+	@Select("select kode_prodi, nama_prodi from program_studi where id = #{kode_prodi}")
 	ProgramStudiModel searchProdi (@Param("kode_prodi") String kode_prodi);
 	
 	@Select("SELECT COUNT(*) as count from mahasiswa where tahun_masuk = #{tahun_masuk} and id_prodi = #{id_prodi} and status = 'Lulus'")
