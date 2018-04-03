@@ -93,6 +93,11 @@ public class MahasiswaController {
 		MahasiswaModel mahasiswa = mahasiswaDAO.searchMahasiswa(npm);
 	    	if(mahasiswa!=null){
 	    		model.addAttribute ("mahasiswa", mahasiswa);
+	    		ProgramStudiModel prodi = mahasiswaDAO.selectProdi(mahasiswa.getId_prodi());
+		    	FakultasModel fakultas = mahasiswaDAO.selectFakultas(prodi.getId_fakultas());
+		    	UniversitasModel universitas = mahasiswaDAO.selectUniversitas(fakultas.getId_univ());
+		    	model.addAttribute("fakultas", fakultas.getNama_fakultas());
+		    	model.addAttribute("universitas", universitas.getNama_univ());
 	    		return "mahasiswa/view-mahasiswa";
 	    	}
 	    	else{
