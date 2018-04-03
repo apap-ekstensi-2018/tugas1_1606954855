@@ -8,6 +8,9 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
+
 import org.apache.ibatis.annotations.*;
 
 import com.example.model.FakultasModel;
@@ -50,12 +53,29 @@ public interface MahasiswaMapper {
 	@Select("select kode_prodi, nama_prodi from program_studi where id = #{kode_prodi}")
 	ProgramStudiModel searchProdi (@Param("kode_prodi") String kode_prodi);
 	
-	@Select("SELECT COUNT(*) as count from mahasiswa where tahun_masuk = #{tahun_masuk} and id_prodi = #{id_prodi} and status = 'Lulus'")
-    String selectAktifMahasiswa(@Param("tahun_masuk") String tahun_masuk, @Param("id_prodi") int id_prodi);
+	@Select("select max(npm) from mahasiswa where npm like CONCAT(#{npm},'%') limit 1")
+    String selectNpm (@Param("npm") String npm);
     
-    @Select("SELECT COUNT(*) as count from mahasiswa where tahun_masuk = #{tahun_masuk} and id_prodi = #{id_prodi}")
-    String selectAktifAllMahasiswa(@Param("tahun_masuk") String tahun_masuk, @Param("id_prodi") int id_prodi);
+    @Select("SELECT COUNT(mahasiswa.npm) as jlh_mahasiswa FROM mahasiswa WHERE status = 'Lulus'"
+    		+ "and tahun_masuk = #{tahun_masuk} AND id_prodi = #{id_prodi}")
+    Integer getJumlahMhsLulus(@Param("tahun_masuk") String tahun_masuk, @Param("id_prodi") Integer id_prodi);
+    
+    @Select("SELECT COUNT(mahasiswa.npm) as jlh_mahasiswa FROM mahasiswa WHERE "
+    		+ "tahun_masuk = #{tahun_masuk} AND id_prodi = #{id_prodi}")
+    Integer getTotalMahasiswa(@Param("tahun_masuk") String tahun_masuk, @Param("id_prodi") Integer id_prodi);
+    
+    @Select("select id, kode_univ, nama_univ from universitas")
+    List<UniversitasModel> selectAllUniversitas();
 	
+    @Select("select id, kode_prodi, nama_prodi, id_fakultas from program_studi where id = #{id_prodi}")
+    ProgramStudiModel selectProdi (@Param("id_prodi") Integer id_prodi);
+    
+    @Select("select id, kode_fakultas, nama_fakultas, id_univ from fakultas where id = #{id_fakultas}")
+    FakultasModel selectFakultas (@Param("id_fakultas") Integer id_fakultas);
+    
+    @Select("select id, kode_univ, nama_univ from universitas where id = #{id_univ}")
+    UniversitasModel selectUniversitas (@Param("id_univ") Integer id_univ);
+    
 	@Select("select * from mahasiswa where id_prodi = #{id_prodi} order by id desc limit 1")
     @Results( value = {
             @Result(property = "npm", column = "npm"),
@@ -72,34 +92,11 @@ public interface MahasiswaMapper {
     })
     MahasiswaModel selectMahasiswaByProdi (@Param("id_prodi") int id_prodi);
 	
-	@Select("select * from universitas where id = #{id_univ}")
-    @Results( value = {
-            @Result(property = "kode_univ", column = "kode_univ"),
-            @Result(property = "nama_unv", column = "nama_unv"),
-    })
-    UniversitasModel selectUniversitas(@Param("id_univ") int id_univ);
-	
 	@Select("select * from mahasiswa where npm LIKE #{npm} order by npm desc limit 1")
     @Results( value = {
             @Result(property = "npm", column = "npm")
     })
     MahasiswaModel selectMahasiswaByNpm (@Param("npm") String npm);
-	
-	@Select("select p.* from program_studi p where p.kode_prodi = #{id_prodi}")
-    @Results( value = {
-            @Result(property = "kode_prodi", column = "kode_prodi"),
-            @Result(property = "nama_prodi", column = "nama_prodi"),
-            @Result(property = "fakultas", column = "id_fakultas", one = @One(select = "selectFakultas"))
-    })
-    ProgramStudiModel selectProdi(@Param("id_prodi") int id_prodi);
-	
-	@Select("select * from fakultas where kode_fakultas = #{id_fakultas}")
-    @Results( value = {
-            @Result(property = "kode_fakultas", column = "kode_fakultas"),
-            @Result(property = "nama_fakultas", column = "nama_fakultas"),
-            @Result(property = "univ", column = "id_univ", one = @One(select = "selectUniversitas"))
-    })
-    FakultasModel selectFakultas(@Param("id_fakultas") int id_fakultas);
     
 	
 	@Insert("INSERT INTO mahasiswa (npm, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, agama, golongan_darah, tahun_masuk, jalur_masuk, id_prodi) "

@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.dao.MahasiswaMapper;
+import com.example.model.FakultasModel;
 import com.example.model.MahasiswaModel;
+import com.example.model.ProgramStudiModel;
+import com.example.model.UniversitasModel;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,22 +56,54 @@ public class MahasiswaServiceDatabase implements MahasiswaService{
     }
     
     @Override
-    public String selectAktifMahasiswa(String tahun_masuk, int id_prodi) {
-    		log.info("select aktif mahasiswa");
-    		return mahasiswaMapper.selectAktifMahasiswa(tahun_masuk, id_prodi);
-		 
+	public ProgramStudiModel selectProdi(Integer id_prodi) {
+		log.info ("select program studi dengan kode {}", id_prodi);
+        return mahasiswaMapper.selectProdi(id_prodi);
+	}
+
+
+	@Override
+	public FakultasModel selectFakultas(Integer id_fakultas) {
+		log.info ("select fakultas dengan kode {}", id_fakultas);
+		return mahasiswaMapper.selectFakultas(id_fakultas);
+	}
+
+	@Override
+	public UniversitasModel selectUniversitas(Integer id_univ) {
+		log.info ("select universitas dengan kode {}", id_univ);
+		return mahasiswaMapper.selectUniversitas(id_univ);
+	}
+	
+	@Override
+    public String selectNpm (String npm){
+    	log.info("select NPM like (to calculate)");
+    	return mahasiswaMapper.selectNpm(npm);
     }
-    
-    @Override
-    public String selectAktifAllMahasiswa(String tahun_masuk, int id_prodi) {
-    		log.info("select all aktif mahasiswa");
-    		return mahasiswaMapper.selectAktifAllMahasiswa(tahun_masuk, id_prodi);
-    }
+
+
+	@Override
+	public Integer jumlahMahasiwaLulus(String tahun_masuk, Integer id_prodi) {
+		log.info("select count() mahasiswa lulus");
+		return mahasiswaMapper.getJumlahMhsLulus(tahun_masuk, id_prodi);
+	}
+
+
+	@Override
+	public Integer totalMahasiswa(String tahun_masuk, Integer id_prodi) {
+		log.info("select count() seluruh mahasiwa");
+		return mahasiswaMapper.getTotalMahasiswa(tahun_masuk, id_prodi);
+	}
     
     @Override
     public MahasiswaModel selectMahasiswaByNpm (String npm) {
     		log.info("select mahasiswa by npm");
     		return  mahasiswaMapper.selectMahasiswaByNpm(npm);
+    }
+    
+    @Override
+    public ProgramStudiModel searchProdi (String kode_prodi) {
+    		log.info("search prodi");
+		return  mahasiswaMapper.searchProdi(kode_prodi);
     }
     
 }

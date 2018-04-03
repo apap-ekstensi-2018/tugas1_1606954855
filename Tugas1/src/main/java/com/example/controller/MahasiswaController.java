@@ -130,30 +130,27 @@ public class MahasiswaController {
     }
 	
 	@RequestMapping(value = "/kelulusan/submit", method = RequestMethod.GET)
-	public String submitKelulusan(Model model, @RequestParam(value = "tahun_masuk", required = false) String tahun_masuk, @RequestParam(value = "id_prodi", required = false) int id_prodi) {	
-		MahasiswaModel mahasiswa = mahasiswaDAO.selectMahasiswaByProdi(id_prodi);
-		String prodi = mahasiswa.getProdi().getNama_prodi() + "";
-		//String nama_fakultas = mahasiswa.getProdi().getFakultas().getNama_fakultas() + "";
-		//String universitas = mahasiswa.getProdi().getFakultas().getUniv().getNama_univ() + "";
-		String jlhAll = mahasiswaDAO.selectAktifAllMahasiswa(tahun_masuk, id_prodi);
-		String jlh = mahasiswaDAO.selectAktifMahasiswa(tahun_masuk, id_prodi);
-		double a = Double.parseDouble(jlh);
-		double n = Double.parseDouble(jlhAll);
-		double persentasi = a/n*100;
-		int persent = (int) persentasi;
-		int jlhLulus = (int) a;
-		int jlhAll_ = (int) n;
-		System.out.println("jumlah = "+a);
-		System.out.println("jumlah all = "+n);
-		System.out.println("persentasi1 = "+persentasi);
-		model.addAttribute("tahun_masuk", tahun_masuk);
-		model.addAttribute("prodi", prodi);
-		//model.addAttribute("fakultas", nama_fakultas);
-		//model.addAttribute("universitas", universitas);
-		model.addAttribute("jlhLulus", jlhLulus);
-		model.addAttribute("jlhAll", jlhAll_);
-		model.addAttribute("persentasi", persent);
-		return "view-persentasi-kelulusan";
+	public String submitKelulusan(Model model, @RequestParam(value = "tahun_masuk", required = false) String tahun_masuk, @RequestParam(value = "id_prodi", required = false) Integer id_prodi) {	
+		ProgramStudiModel prodi = mahasiswaDAO.selectProdi(id_prodi);
+	    	FakultasModel fakultas = mahasiswaDAO.selectFakultas(prodi.getId_fakultas());
+	    	UniversitasModel universitas = mahasiswaDAO.selectUniversitas(fakultas.getId_univ());
+	    	
+	    	Integer jlhMahasiswa = mahasiswaDAO.jumlahMahasiwaLulus(tahun_masuk, id_prodi);
+	    	Integer totalMahasiwa = mahasiswaDAO.totalMahasiswa(tahun_masuk, id_prodi);
+	    	String presentaseLulus = "0";
+	
+			if (totalMahasiwa > 0) {
+				presentaseLulus = String.format("%.2f", ((float)jlhMahasiswa/(float)totalMahasiwa) * 100);
+			}
+	    	model.addAttribute("tahun_masuk", tahun_masuk);
+	    	model.addAttribute("program_studi", prodi.getNama_prodi());
+	    	model.addAttribute("fakultas", fakultas.getNama_fakultas());
+	    	model.addAttribute("universitas", universitas.getNama_univ());
+	    	model.addAttribute("jlhMahasiswa", jlhMahasiswa);
+	    	model.addAttribute("totalMahasiwa", totalMahasiwa);
+	    	model.addAttribute("persen", presentaseLulus);
+	    	
+		return "mahasiswa/view-persentase";
 	} 
 	
 	@RequestMapping("/mahasiswa/cari")
