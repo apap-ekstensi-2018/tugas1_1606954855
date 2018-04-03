@@ -1,5 +1,7 @@
 package com.example.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.dao.UniversitasMapper;
@@ -17,9 +19,9 @@ public class UniversitasServiceDatabase implements UniversitasService {
 
 
     @Override
-	public UniversitasModel getAllUniv () {
+	public List<UniversitasModel> getAllUniv () {
 		log.info ("select all univ");
-        UniversitasModel universitas = universitasMapper.getAllUniv();
-        return universitas;
+        List<UniversitasModel> universitas = universitasMapper.getAllUniv();
+        return universitasMapper.getAllUniv();
 	}
 }

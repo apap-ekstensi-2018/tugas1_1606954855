@@ -28,9 +28,9 @@
     		<hr/>
         <form action="/mahasiswa" method="get">
         	<b>Universitas</b><br/>
-        	<select class="form-control" th:field="${operator.opeId}"  id="dropOperator">
+        	<select class="form-control" th:field="${universitas}">
 	    <option value="0" th:text="pilih universitas" ></option>
-	    <option th:each="operator : ${universitas}" th:value="${universitas.id}" th:text="${universitas.kode_universitas}"></option>
+	    <!-- <option th:each="universitas : ${universitas}" th:value="${universitas.kode_univ}" th:text="${universitas.nama_univ}"></option> -->
 	    </select>
         	<input class="btn btn-success" type="submit" value="Lihat" />
         </form>
