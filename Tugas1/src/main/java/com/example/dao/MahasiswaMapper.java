@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import com.example.model.FakultasModel;
 import com.example.model.MahasiswaModel;
@@ -48,6 +49,36 @@ public interface MahasiswaMapper {
 	
 	@Select("select kode_prodi from program_studi where id = #{kode_prodi}")
 	ProgramStudiModel searchProdi (@Param("kode_prodi") String kode_prodi);
+	
+	@Select("SELECT COUNT(*) as count from mahasiswa where tahun_masuk = #{tahun_masuk} and id_prodi = #{id_prodi} and status = 'Lulus'")
+    String selectAktifMahasiswa(@Param("tahun_masuk") String tahun_masuk, @Param("id_prodi") int id_prodi);
+    
+    @Select("SELECT COUNT(*) as count from mahasiswa where tahun_masuk = #{tahun_masuk} and id_prodi = #{id_prodi}")
+    String selectAktifAllMahasiswa(@Param("tahun_masuk") String tahun_masuk, @Param("id_prodi") int id_prodi);
+	
+	@Select("select * from mahasiswa where id_prodi = #{id_prodi} order by id desc limit 1")
+    @Results( value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "npm", column = "npm"),
+            @Result(property = "nama", column = "nama"),
+            @Result(property = "tempat_lahir", column = "tempat_lahir"),
+            @Result(property = "tanggal_lahir", column = "tanggal_lahir"),
+            @Result(property = "jenis_kelamin", column = "jenis_kelamin"),
+            @Result(property = "agama", column = "agama"),
+            @Result(property = "golongan_darah", column = "golongan_darah"),
+            @Result(property = "status", column = "status"),
+            @Result(property = "tahun_masuk", column = "tahun_masuk"),
+            @Result(property = "jalur_masuk", column = "jalur_masuk"),
+            @Result(property = "prodi", column = "id_prodi", one = @One(select = "selectProdi"))
+    })
+    MahasiswaModel selectMahasiswaByProdi (@Param("id_prodi") int id_prodi);
+	
+	@Select("select * from mahasiswa where npm LIKE #{npm} order by npm desc limit 1")
+    @Results( value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "npm", column = "npm")
+    })
+    MahasiswaModel selectMahasiswaByNpm (@Param("npm") String npm);
 	
 	@Insert("INSERT INTO mahasiswa (npm, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, agama, golongan_darah, tahun_masuk, jalur_masuk, id_prodi) "
 			+ "VALUES (#{mahasiswa.npm}, #{mahasiswa.nama}, #{mahasiswa.tempat_lahir},  #{mahasiswa.tanggal_lahir}, #{mahasiswa.jenis_kelamin}, #{mahasiswa.agama}, #{mahasiswa.golongan_darah}, #{mahasiswa.tahun_masuk}, #{mahasiswa.jalur_masuk}, #{mahasiswa.id_prodi})")

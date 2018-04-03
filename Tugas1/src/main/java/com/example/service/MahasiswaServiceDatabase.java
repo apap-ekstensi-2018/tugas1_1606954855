@@ -44,4 +44,31 @@ public class MahasiswaServiceDatabase implements MahasiswaService{
     		log.info("mahasiswa " + mahasiswa.getNpm() + " updated");
     		mahasiswaMapper.updateMahasiswa(mahasiswa);
     }
+    
+    @Override
+    public MahasiswaModel selectMahasiswaByProdi (int id_prodi)
+    {
+    		log.info("select mahasiswa by prodi");
+    		return mahasiswaMapper.selectMahasiswaByProdi(id_prodi);
+    }
+    
+    @Override
+    public String selectAktifMahasiswa(String tahun_masuk, int id_prodi) {
+    		log.info("select aktif mahasiswa");
+    		return mahasiswaMapper.selectAktifMahasiswa(tahun_masuk, id_prodi);
+		 
+    }
+    
+    @Override
+    public String selectAktifAllMahasiswa(String tahun_masuk, int id_prodi) {
+    		log.info("select all aktif mahasiswa");
+    		return mahasiswaMapper.selectAktifAllMahasiswa(tahun_masuk, id_prodi);
+    }
+    
+    @Override
+    public MahasiswaModel selectMahasiswaByNpm (String npm) {
+    		log.info("select mahasiswa by npm");
+    		return  mahasiswaMapper.selectMahasiswaByNpm(npm);
+    }
+    
 }

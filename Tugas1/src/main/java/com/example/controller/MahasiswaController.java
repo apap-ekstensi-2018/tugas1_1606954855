@@ -56,8 +56,31 @@ public class MahasiswaController {
             @RequestParam(value = "univ", required = false) UniversitasModel univ,
             @RequestParam(value = "prodi", required = false) ProgramStudiModel prodi, Model model)
     {
-		npm = tahun_masuk + univ + prodi;
-	 	MahasiswaModel mahasiswa = new MahasiswaModel (npm, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, agama, golongan_darah, status, tahun_masuk,jalur_masuk, id_prodi, fakultas, univ, prodi);
+		String npm_fin, order;
+//		String thnMasuk = tahun_masuk.substring(2);
+//		MahasiswaModel mahasiswa = mahasiswaDAO.selectMahasiswaByProdi(id_prodi);
+//		//String kodeUniv = mahasiswa.getProdi().getFakultas().getUniv().getKode_univ() + "";
+//		String kodeUniv = "212";
+//		String kodeProdi = mahasiswa.getProdi().getKode_prodi();
+//		//String kode_jalur = getJalurMahasiswa(jalur_masuk);
+//		String kode_jalur = "23";
+//		npm = '%' + thnMasuk + kodeUniv + kodeProdi + kode_jalur + '%';
+//		System.out.println("npm = " + npm);
+		MahasiswaModel student_n = mahasiswaDAO.selectMahasiswaByNpm(npm);
+		if (student_n == null) {
+			order = "01";
+		} else {
+			String id = student_n.getNpm();
+			String no_input = id.substring(9);
+			int temp_order = Integer.parseInt(no_input);
+			temp_order = temp_order + 1;
+			order = temp_order + "";
+
+		}
+//		npm_fin = thnMasuk + kodeUniv + kodeProdi + kode_jalur + order;
+		npm_fin = tahun_masuk.substring(2) + univ + prodi + order;
+//		System.out.println("npmfin" + npm_fin);
+	 	MahasiswaModel mahasiswa = new MahasiswaModel (npm_fin, nama, tempat_lahir, tanggal_lahir, jenis_kelamin, agama, golongan_darah, status, tahun_masuk,jalur_masuk, id_prodi, fakultas, univ, prodi);
 		mahasiswaDAO.addMahasiswa (mahasiswa);
 		model.addAttribute ("mahasiswa", mahasiswa);
         return "mahasiswa/add-success";
@@ -105,6 +128,33 @@ public class MahasiswaController {
     {	
         return "mahasiswa/presentase-kelulusan";
     }
+	
+	@RequestMapping(value = "/kelulusan/submit", method = RequestMethod.GET)
+	public String submitKelulusan(Model model, @RequestParam(value = "tahun_masuk", required = false) String tahun_masuk, @RequestParam(value = "id_prodi", required = false) int id_prodi) {	
+		MahasiswaModel mahasiswa = mahasiswaDAO.selectMahasiswaByProdi(id_prodi);
+		String prodi = mahasiswa.getProdi().getNama_prodi() + "";
+		//String nama_fakultas = mahasiswa.getProdi().getFakultas().getNama_fakultas() + "";
+		//String universitas = mahasiswa.getProdi().getFakultas().getUniv().getNama_univ() + "";
+		String jlhAll = mahasiswaDAO.selectAktifAllMahasiswa(tahun_masuk, id_prodi);
+		String jlh = mahasiswaDAO.selectAktifMahasiswa(tahun_masuk, id_prodi);
+		double a = Double.parseDouble(jlh);
+		double n = Double.parseDouble(jlhAll);
+		double persentasi = a/n*100;
+		int persent = (int) persentasi;
+		int jlhLulus = (int) a;
+		int jlhAll_ = (int) n;
+		System.out.println("jumlah = "+a);
+		System.out.println("jumlah all = "+n);
+		System.out.println("persentasi1 = "+persentasi);
+		model.addAttribute("tahun_masuk", tahun_masuk);
+		model.addAttribute("prodi", prodi);
+		//model.addAttribute("fakultas", nama_fakultas);
+		//model.addAttribute("universitas", universitas);
+		model.addAttribute("jlhLulus", jlhLulus);
+		model.addAttribute("jlhAll", jlhAll_);
+		model.addAttribute("persentasi", persent);
+		return "view-persentasi-kelulusan";
+	} 
 	
 	@RequestMapping("/mahasiswa/cari")
     public String search (Model model)
